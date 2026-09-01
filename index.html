@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>НУУЦ ХЭРЭГ V8 — Extreme IQ Edition</title>
+<style>
+:root{
+ --bg:#030712;--panel:#0f172a;--panel2:#1e293b;--line:#334155;--text:#f8fafc;
+ --muted:#94a3b8;--accent:#6366f1;--accent2:#a5b4fc;--danger:#f43f5e;--ok:#10b981;
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}.screen{display:none;min-height:100vh}.screen.active{display:flex}
+#menu{align-items:center;justify-content:center;padding:22px;background:radial-gradient(circle at 50% 30%,#312e81 0,#030712 80%)}
+.menu{width:min(900px,100%);text-align:center}.brand{font-size:clamp(36px,6vw,64px);font-weight:900;letter-spacing:14px;color:#fff;text-shadow:0 0 50px rgba(99,102,241,0.5)}
+.tag{color:var(--accent2);margin:12px 0 35px;font-size:12px;letter-spacing:3px;font-weight:700}
+.menuBtns{width:min(380px,100%);margin:auto}
+.btn{width:100%;padding:14px 18px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);margin:8px 0;transition:all .2s;font-weight:600;font-size:14px}
+.btn:hover{border-color:var(--accent);background:#312e81}.primary{background:#4f46e5;border-color:#818cf8;color:#fff}
+.primary:hover{background:#4338ca}
+#levels{align-items:center;justify-content:center;padding:24px}.levelWrap{width:min(1100px,100%)}.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:25px 0}
+.level{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;justify-content:space-between}.level p{color:var(--muted);min-height:70px;line-height:1.6;font-size:13px}
+.level h2{margin:0 0 10px;font-size:18px;color:#fff}.level button{width:100%;padding:11px;border:1px solid var(--line);border-radius:6px;background:#172554;font-weight:600}
+.level button:hover{background:#1e40af}
+#game{padding:16px;flex-direction:column}.top{width:min(1380px,100%);margin:auto auto 14px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.badges{display:flex;gap:8px;flex-wrap:wrap}.badge{border:1px solid var(--line);background:var(--panel);padding:6px 12px;border-radius:6px;font-size:12px;color:var(--accent2)}
+.layout{width:min(1380px,100%);margin:auto;display:grid;grid-template-columns:280px 1fr;gap:14px;flex:1}.side,.mainPanel{background:var(--panel);border:1px solid var(--line);border-radius:12px}.side{padding:12px}.tab{width:100%;text-align:left;padding:12px;border:1px solid transparent;background:transparent;border-radius:6px;margin-bottom:4px;color:#94a3b8;font-size:13px;font-weight:500;transition:all .15s}.tab:hover{background:var(--panel2);color:#fff}.tab.active{background:#312e81;border-color:#6366f1;color:#fff;font-weight:600}
+.mainPanel{padding:28px;overflow:auto}.eyebrow{color:var(--accent2);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.title{font-size:24px;margin:6px 0 16px;font-weight:800}.muted{color:var(--muted);line-height:1.6;font-size:13.5px}
+.box{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:18px;margin:14px 0}.box h3{margin:0 0 8px;font-size:14px;color:#fff}.box p{line-height:1.65;margin:4px 0;font-size:13px;color:#cbd5e1}
+.suspect{border:1px solid var(--line);background:var(--panel2);padding:18px;border-radius:10px;margin:12px 0}
+.suspectHead{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}.suspectName{font-weight:700;font-size:15px;color:#fff}.role{font-size:11px;color:var(--accent2);background:#090d16;padding:3px 8px;border-radius:4px;border:1px solid var(--line)}
+.alibiBox{background:#090d16;padding:12px;border-radius:6px;border-left:3px solid #6366f1;margin:8px 0;font-size:13px;color:#cbd5e1;line-height:1.6}
+.psychology{background:#181024;padding:10px 12px;border-radius:6px;border-left:3px solid #c084fc;margin-top:6px;font-size:12.5px;color:#f3e8ff}
+.forensicGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}.fCard{background:#090d16;border:1px solid var(--line);padding:14px;border-radius:8px}.fCard h4{margin:0 0 6px;font-size:12px;color:var(--accent2);text-transform:uppercase}.fCard p{margin:0;font-size:13px;color:#cbd5e1;line-height:1.5}
+.choiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.choice{padding:12px 14px;text-align:left;border:1px solid var(--line);border-radius:6px;background:var(--panel2);font-size:12.5px;line-height:1.4}.choice.selected{border-color:var(--accent2);background:#312e81;color:#fff;font-weight:600}
+.confidence{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.confidence button{border:1px solid var(--line);background:var(--panel2);padding:8px 14px;border-radius:6px;font-size:12px}.confidence button.sel{background:#312e81;border-color:var(--accent2);color:#fff;font-weight:600}
+.result{width:min(800px,100%);margin:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:36px;text-align:center}.result h1{font-size:28px;margin:0 0 10px}.good{color:var(--ok)}.bad{color:var(--danger)}
+@media(max-width:820px){.levels,.layout,.forensicGrid,.choiceGrid{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr;gap:4px}}
+</style>
+</head>
+<body>
+
+<section id="menu" class="screen active">
+<div class="menu">
+  <div class="brand">НУУЦ ХЭРЭГ V8</div>
+  <div class="tag">EXTREME HIGH-IQ DEDUCTIVE ENGINE</div>
+  <div class="menuBtns">
+    <button class="btn primary" onclick="show('levels')">▶ МӨРДЛӨГИЙГ ЭХЛҮҮЛЭХ</button>
+  </div>
+</div>
+</section>
+
+<section id="levels" class="screen">
+<div class="levelWrap">
+  <h1 style="font-size:24px;margin-bottom:6px">ХҮНДРЭЛИЙН ТҮВШИН СОНГОХ</h1>
+  <p class="muted">Энд ямар ч шууд таавар байхгүй. Сэжигтэн бүр өөрийн гэсэн далд сэдэл, хуурамч мэдүүлэгтэй.</p>
+  <div class="levels">
+    <div class="level">
+      <div><h2>🧠 СЭТГЭЛ ЗҮЙН МАТРИЦ</h2><p>5 Сэжигтэн. 6 Механизмын сонголт. Далд сэдэл ба хуурамч мэдүүлгийн зөрчил.</p></div>
+      <button onclick="start('easy')">ЭХЛҮҮЛЭХ</button>
+    </div>
+    <div class="level">
+      <div><h2>🧩 МАТЕМАТИК ЛОГИК</h2><p>6 Сэжигтэн. 7 Механизмын сонголт. Цаг агаар, GSM станцын лог болон цусны группийн матриц.</p></div>
+      <button onclick="start('normal')">ЭХЛҮҮЛЭХ</button>
+    </div>
+    <div class="level">
+      <div><h2>💀 GRANDMASTER IQ (140+)</h2><p>8 Сэжигтэн. 7 Механизмын сонголт. 3 давхар саад, сэтгэл зүйн манипуляци болон хуурамч мэдүүлгүүд.</p></div>
+      <button onclick="start('hard')">ЭХЛҮҮЛЭХ</button>
+    </div>
+  </div>
+  <button class="btn" style="width:180px" onclick="show('menu')">← БУЦАХ</button>
+</div>
+</section>
+
+<section id="game" class="screen">
+<div class="top">
+  <div class="badges">
+    <span class="badge" id="caseNo"></span>
+    <span class="badge" id="levelBadge"></span>
+  </div>
+  <div class="badges">
+    <div class="badge" style="color:#fbbf24">⏱ <span id="timer">40:00</span></div>
+    <button class="btn" style="margin:0;padding:5px 12px;width:auto;font-size:12px" onclick="exitCase()">🚪 Гарах</button>
+  </div>
+</div>
+<div class="layout">
+  <aside class="side">
+    <button class="tab active" onclick="tab('scene',this)">📍 Хэргийн Нөхцөл Байдал</button>
+    <button class="tab" onclick="tab('forensics',this)">🔬 Шүүх Эмнэлэг & Физик</button>
+    <button class="tab" onclick="tab('suspects',this)">👤 Сэжигтнүүд & Сэтгэл Зүй</button>
+    <button class="tab" onclick="tab('timeline',this)">🕐 Цаг Хугацааны Матриц</button>
+    <button class="tab" onclick="tab('notes',this)">📝 Тэмдэглэл & Тооцоолол</button>
+    <button class="tab" style="color:var(--accent2);margin-top:15px;background:#312e81" onclick="accuse()">⚖️ ЯЛЫН ДҮГНЭЛТ ВҮҮЛЭХ</button>
+  </aside>
+  <main class="mainPanel" id="content"></main>
+</div>
+</section>
+
+<section id="result" class="screen"><div class="result" id="resultBox"></div></section>
+
+<script>
+const LEVELS = { easy: { n: 5, time: 2400 }, normal: { n: 6, time: 3000 }, hard: { n: 8, time: 3600 } };
+
+const names = ["Бат-Эрдэнэ", "Саруул", "Тэмүүлэн", "Номин-Эрдэнэ", "Ганзориг", "Оюунчимэг", "Билгүүн", "Төгөлдөр", "Ариунболд", "Мөнх-Эрдэнэ", "Дөлгөөн", "Энхжин", "Сүхбат", "Халиун", "Золбоо", "Анужин"];
+const roles = ["Санхүүгийн зөвлөх", "Хувийн эмч", "Эд хөрөнгийн залгамжлагч", "Компанийн хуульч", "Гэрээт хамгаалагч", "Нууц хамтран амьдрагч", "Бизнесийн өрсөлдөгч", "Хуучин түнш"];
+
+const MECHANISMS = [
+  "1. Эмнэлгийн тариаг сольж, инсулины тунг хэтрүүлэн зүрхний зогсолт үүсгэсэн",
+  "2. Агааржуулалтын системээр дамжуулан химийн идэвхт ургамлын далд хор шахаж хордуулсан",
+  "3. Хохирогчийг сэтгэл зүйн дарамтад оруулж, эмх замбараагүй байдал үүсгэн амиа хорлоход хүргэсэн",
+  "4. Ундны вискинд нь төв мэдрэлийн системийг саатуулдаг тайвшруулах бодис уусган ухаан алдуулж орхисон",
+  "5. Өрөөний агаарын даралтыг өөрчлөн хүчилтөрөгчийн дутагдалд оруулж, зүрхний шигдээс симуляци хийсэн",
+  "6. Хохирогчийн өдөр тутмын хэрэглэдэг эмийг даралт бууруулагчтай хольж тайван унтуулсны дараа бүтээсэн",
+  "7. Сөрөг нөлөө үзүүлэх химийн хоёр өөр бодисыг цаг хугацааны зөрүүтэй уулгаж хордуулсан"
+];
+
+const MASTER_CASES = [
+  {
+    title: "Парадокс ба Симуляци",
+    desc: "Хохирогч нь өөрийн ажлын өрөөндөө нас барсан. Хаалга дотроос цоожтой, цонх хаалттай байв. Шүүх эмнэлгээс хохирогчийн биед гадна талын ямар нэгэн хүчирхийллийн ул мөр байхгүй гэж дүгнэсэн ч цусанд нь байх ёсгүй бодис илэрсэн.",
+    motive: "Компанийн 51%-ийн хувьцааг хяналтандаа авах болон далд заналхийлэл",
+    correctMechIndex: 0
+  },
+  {
+    title: "Цасны Ул Мөр ба GSM Сүлжээний Зөрчил",
+    desc: "Шөнө 23:15 цагт хохирогч хашаандаа амь нас нь хохирсон. Хэрэг гарсан үед шинээр цас орж байсан бөгөөд зөвхөн 1 хүний гутлын мөр гарсан байдаг. Гэвч сэжигтнүүдийн 2 нь яг тэр цагт бие биенийхээ алибийг баталж байгаа ч тэдний утасны лог өөр станцаас идэвхжсэн.",
+    motive: "Хууль бус бизнесийн орлого хуваах маргаан ба өшөө авалт",
+    correctMechIndex: 5
+  }
+];
+
+let current = null, seconds = 0, timerId = null;
+let selectedType = null, selectedSuspect = null, confidence = null, notes = "";
+
+function r(n){ return Math.floor(Math.random()*n); }
+function pick(a){ return a[r(a.length)]; }
+function pad(n){ return String(n).padStart(2,"0"); }
+function timeStr(min){ min=((Math.round(min)%1440)+1440)%1440; return `${pad(Math.floor(min/60))}:${pad(min%60)}`; }
+
+function show(id){
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function makeCase(level){
+  const n = LEVELS[level].n;
+  const pNames = names.sort(()=>Math.random()-.5).slice(0,n);
+  const victim = names.filter(x=>!pNames.includes(x))[0];
+  const master = pick(MASTER_CASES);
+  const culpritIndex = r(n);
+  const crimeMin = 1340 + r(40); // 22:20 - 23:00
+
+  const suspects = pNames.map((name, i) => {
+    const isCulprit = (i === culpritIndex);
+    let alibi = "";
+    let psych = "";
+    let secret = "";
+
+    if(isCulprit) {
+      alibi = `Би 22:00-оос 23:30 хүртэл хотын эсрэг талын замын кафедад ганцаараа кофе ууж байсан. Кафены зөөгч намайг санаж байгаа.`;
+      psych = `Сэтгэл зүйн хувьд дэндүү тайван. Хохирогчийн талаар асуухад бэлтгэсэн мэт дарааллаар хариулж, асуултаас зальжин зайлсхийж байна.`;
+      secret = `Санхүүгийн гүн хямралд орсон, хохирогчоос их хэмжээний мөнгө зээлээд буцааж төлөх боломжгүй байсан.`;
+    } else {
+      const randRel = r(3);
+      if(randRel === 0){
+        alibi = `Би тухайн цагт гэртээ байсан. Намайг ${pNames[(i+1)%n]} харсан гэж баталж чадна.`;
+        psych = `Савлан сандарсан шинжтэй. Өөр хууль бус зүйлийг нуун дарагдуулах гэж хичээж байгаа нь ажиглагдана.`;
+        secret = `Гэмт хэрэгт хамаагүй ч хохирогчийн сейфнээс чухал бичиг баримт нууцаар хуулбарлан авснаа нууж байгаа.`;
+      } else {
+        alibi = `Би 22:15-д хохирогчтой уулзахаар очсон ч хаалгаа тайлаагүй тул 22:30-д буцаад явсан.`;
+        psych = `Хүйтэн нухацтай. Тайлбартаа хэт итгэлтэй байгаа нь логик дарамт үүсгэх зорилготой.`;
+        secret = `Хохирогчтой хувийн сэтгэл зүйн асар том зөрчилтэй байсан ч алиби нь камерын бичлэгээр баталгаажина.`;
+      }
+    }
+    return { name, role: pick(roles), alibi, psych, secret, isCulprit };
+  });
+
+  return {
+    level, victim, master, suspects, culpritIndex, crimeMin,
+    memo: `CASE-IQ-${Math.floor(100000 + Math.random()*900000)}`,
+    forensics: {
+      toxicology: `Хохирогчийн цуснаас цусан дахь сахарын хэмжээ эрс буурсан болон тайвшруулах ургамлын гаралтай бодисын ул мөр олдсон.`,
+      physical: `Хэргийн газрын хивсэн дээрээс гутлын мөр олдсон (Хэмжээ: 42). Хаалганы бариулаас 2 өөр хүний бээлийн суналтын ул мөр байна.`,
+      bloodType: `Хэргийн газраас олдсон үсний ширхэгийн ДНХ-ийн эс нь: [Групп: AB (IV) Сөрөг]-тэй тохирч байна. (Сэжигтнүүдээс 2 хүн ийм цусны групптэй).`
+    }
+  };
+}
+
+function start(level){
+  current = makeCase(level);
+  selectedType = null; selectedSuspect = null; confidence = null; notes = "";
+  seconds = LEVELS[level].time;
+  clearInterval(timerId);
+  
+  document.getElementById("caseNo").textContent = current.memo;
+  document.getElementById("levelBadge").textContent = level.toUpperCase();
+  
+  updateTimer();
+  timerId = setInterval(()=>{
+    seconds--;
+    updateTimer();
+    if(seconds <= 0){ clearInterval(timerId); accuse(true); }
+  }, 1000);
+  
+  show("game");
+  tab('scene', document.querySelector(".tab"));
+}
+
+function exitCase(){
+  if(confirm("Мөрдлөгийг цуцлах уу?")){ clearInterval(timerId); show("levels"); }
+}
+
+function updateTimer(){
+  document.getElementById("timer").textContent = `${Math.floor(seconds/60)}:${pad(seconds%60)}`;
+}
+
+function tab(type, btn){
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+  const c = document.getElementById("content");
+  
+  if(type === 'scene'){
+    c.innerHTML = `
+      <div class="eyebrow">ГҮН АНАЛИЗ БА НӨХЦӨЛ</div>
+      <div class="title">${current.master.title} (Хохирогч: ${current.victim})</div>
+      <div class="box">
+        <h3>📍 Хэргийн Нөхцөл Байдал</h3>
+        <p>${current.master.desc}</p>
+        <p style="margin-top:10px;color:var(--accent2)"><b>Сэжиглэж буй сэдэл:</b> ${current.master.motive}</p>
+      </div>
+      <div class="box" style="border-left:3px solid var(--danger)">
+        <h3>⚠️ Мөрдөгчид өгөх анхааруулга</h3>
+        <p class="muted">Сэжигтнүүдийн зарим нь гэмт хэрэгт буруугүй ч өөр нууцаа нуухын тулд ХУДАЛ мэдүүлэг өгч байгаа. Зөвхөн алибигийн цагийн зөрчил болон сэтгэл зүйн далд манипуляцийг задлан шинжил!</p>
+      </div>
+    `;
+  } else if(type === 'forensics'){
+    c.innerHTML = `
+      <div class="eyebrow">ШҮҮХ ЭМНЭЛЭГ & ФИЗИК БАРИМТ</div>
+      <div class="title">Лабораторийн Шинжилгээний Дүгнэлт</div>
+      <div class="forensicGrid">
+        <div class="fCard"><h4>🧪 Токсикологи (Хор судлал)</h4><p>${current.forensics.toxicology}</p></div>
+        <div class="fCard"><h4>👟 Физик Ул Мөр</h4><p>${current.forensics.physical}</p></div>
+        <div class="fCard"><h4>🧬 ДНХ ба Цусны Групп</h4><p>${current.forensics.bloodType}</p></div>
+        <div class="fCard"><h4>⏱ Нас барсан хугацаа</h4><p>Шүүх эмнэлгийн биологийн задарлаар нас барсан цаг: <b>${timeStr(current.crimeMin-10)} - ${timeStr(current.crimeMin+15)}</b> хооронд.</p></div>
+      </div>
+    `;
+  } else if(type === 'suspects'){
+    c.innerHTML = `<div class="eyebrow">СЭЖИГТНҮҮДИЙН МЭДҮҮЛЭГ БА СЭТГЭЛ ЗҮЙ</div><div class="title">Байцаалтын Протокол</div>` + 
+      current.suspects.map((s) => `
+        <div class="suspect">
+          <div class="suspectHead"><span class="suspectName">${s.name}</span><span class="role">${s.role}</span></div>
+          <div class="alibiBox"><b>Алиби (Тайбар):</b> “${s.alibi}”</div>
+          <div class="psychology"><b>🧠 Сэтгэл зүйчийн ажиглалт:</b> ${s.psych}</div>
+          <p style="font-size:12px;color:var(--muted);margin-top:6px"><b>Далд сонирхол/Нууц:</b> ${s.secret}</p>
+        </div>
+      `).join("");
+  } else if(type === 'timeline'){
+    c.innerHTML = `
+      <div class="eyebrow">ЦАГ ХУГАЦААНЫ МАТРИЦ</div>
+      <div class="title">Логик Харьцуулалт</div>
+      <div class="box">
+        <h3>⏱ Хэрэг гарсан цаг: ${timeStr(current.crimeMin)}</h3>
+        <p class="muted">Доорх сэжигтэн бүрийн алибиг хэрэг гарсан яг цагтай харьцуулж, хэний тайлбар математик болон физик боломжгүй байгааг тооцоол.</p>
+      </div>
+      ${current.suspects.map(s => `
+        <div class="box">
+          <h3>👤 ${s.name} (${s.role})</h3>
+          <p><b>Мэдүүлсэн цаг:</b> ${s.alibi}</p>
+        </div>
+      `).join("")}
+    `;
+  } else if(type === 'notes'){
+    c.innerHTML = `
+      <div class="eyebrow">СХЕМ БА ТЭМДЭГЛЭЛ</div><div class="title">Мөрдөгчийн Черновик</div>
+      <p class="muted">Энд цагийн зөрөө, сэжигтнүүдийн холбоос, цусны группийн матрицаа тэмдэглэн авч бодно уу.</p>
+      <textarea id="noteArea" style="width:100%;min-height:240px;background:#090d16;border:1px solid var(--line);border-radius:8px;color:#fff;padding:14px;font-family:monospace;line-height:1.5">${notes}</textarea>
+    `;
+  }
+}
+
+function accuse(){
+  clearInterval(timerId);
+  
+  let suspectOptions = current.suspects.map((s, i) => 
+    `<button class="choice ${selectedSuspect===i?'selected':''}" onclick="selectedSuspect=${i};accuse()">${s.name} (${s.role})</button>`
+  ).join("");
+
+  let mechOptions = MECHANISMS.map((m, idx) => 
+    `<button class="choice ${selectedType===idx?'selected':''}" onclick="selectedType=${idx};accuse()">${m}</button>`
+  ).join("");
+
+  document.getElementById("content").innerHTML = `
+    <div class="eyebrow">ШҮҮХИЙН ЯЛЫН ДҮГНЭЛТ</div><div class="title">Эцсийн Шийдвэр Гаргах</div>
+    <div class="box">
+      <h3>1. Гэмт хэргийн яг тодорхой механизм (7 Сонголт)?</h3>
+      <div class="choiceGrid">${mechOptions}</div>
+    </div>
+    <div class="box">
+      <h3>2. Жинхэнэ гэм буруутай хэрэгтэн (Алиби нь логикийн хувьд няцаагдсан)?</h3>
+      <div class="choiceGrid">${suspectOptions}</div>
+    </div>
+    <div class="box">
+      <h3>3. Таны логик итгэл үнэмшил?</h3>
+      <div class="confidence">${["50% (Эргэлзээтэй)", "75% (Нотлох боломжтой)", "99% (Математик нотолгоотой)"].map(c => `<button class="${confidence===c?'sel':''}" onclick="confidence='${c}';accuse()">${c}</button>`).join("")}</div>
+    </div>
+    <div style="margin-top:20px"><button class="btn primary" onclick="submitVerdict()">⚖️ ЯЛЫН ДҮГНЭЛТИЙГ УНШИХ</button></div>
+  `;
+}
+
+function submitVerdict(){
+  if(selectedType === null || selectedSuspect === null || !confidence){ alert("Бүх асуултад дүгнэлт ажиллана уу!"); return; }
+  
+  const typeCorrect = selectedType === current.master.correctMechIndex;
+  const suspectCorrect = selectedSuspect === current.culpritIndex;
+  const isSuccess = typeCorrect && suspectCorrect;
+  const culprit = current.suspects[current.culpritIndex];
+  
+  show("result");
+  document.getElementById("resultBox").innerHTML = isSuccess ? `
+    <h1 class="good">🧠 ГЕНИАЛЬ ДҮГНЭЛТ! (АМЖИЛТТАЙ)</h1>
+    <p>Та хэрэгтэн <b>${culprit.name}</b>-ийн сэтгэл зүйн болон цаг хугацааны далд маскыг тайлж чадлаа.</p>
+    <div class="box" style="text-align:left">
+      <p><b>Зөв механизм:</b> ${MECHANISMS[current.master.correctMechIndex]}</p>
+      <p><b>Хэрэгтний нууц сэдэл:</b> ${culprit.secret}</p>
+    </div>
+    <button class="btn primary" onclick="show('levels')">ДАРААГИЙН HIGH IQ ХЭРЭГ</button>
+  ` : `
+    <h1 class="bad">✕ ДҮГНЭЛТ БУРУУ (ШҮҮХ НЯЦААВ)</h1>
+    <p>Та сэжигтний хуурамч маск эсвэл өөр сэжигтний худал мэдүүлэгт төөрөгдсөн байна.</p>
+    <div class="box" style="text-align:left">
+      <p><b>Жинхэнэ хэрэгтэн:</b> ${culprit.name}</p>
+      <p><b>Түүний далд сэдэл:</b> ${culprit.secret}</p>
+      <p><b>Зөв механизм:</b> ${MECHANISMS[current.master.correctMechIndex]}</p>
+    </div>
+    <button class="btn primary" onclick="show('levels')">ДАХИН ТҮВШИН СОНГОХ</button>
+  `;
+}
+</script>
+</body>
+</html>
